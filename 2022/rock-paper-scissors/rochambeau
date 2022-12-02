@@ -44,7 +44,7 @@ module Rochambeau
       scores = rounds.map do |opponent, player|
         SHAPE_SCORES[player] + OUTCOME_SCORES[[opponent, player]]
       end
-      puts scores.sum
+      puts "Solution #1: #{scores.sum}"
     end
   end
 
@@ -72,7 +72,7 @@ module Rochambeau
       scores = rounds.map do |opponent, player|
         SHAPE_SCORES[player] + OUTCOME_SCORES[[opponent, player]]
       end
-      puts scores.sum
+      puts "Solution #2: #{scores.sum}"
     end
   end
 end
