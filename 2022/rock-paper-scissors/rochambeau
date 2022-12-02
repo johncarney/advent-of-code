@@ -38,7 +38,35 @@ module Rochambeau
     end
 
     def run
-      rounds = strategy_file.readlines.map { |line| SHAPES.values_at(*line.strip.split(/\s+/)) }
+      rounds = strategy_file.readlines.map { |line| SHAPE_MAP.values_at(*line.strip.split(/\s+/)) }
+      scores = rounds.map do |opponent, player|
+        SHAPE_SCORES[player] + OUTCOME_SCORES[[opponent, player]]
+      end
+      puts scores.sum
+    end
+  end
+
+  class Solution2
+    ROUND_MAP = {
+      %w[A X] => %w[Rock     Scissors],
+      %w[A Y] => %w[Rock     Rock    ],
+      %w[A Z] => %w[Rock     Paper   ],
+      %w[B X] => %w[Paper    Rock    ],
+      %w[B Y] => %w[Paper    Paper   ],
+      %w[B Z] => %w[Paper    Scissors],
+      %w[C X] => %w[Scissors Paper   ],
+      %w[C Y] => %w[Scissors Scissors],
+      %w[C Z] => %w[Scissors Rock    ]
+    }.freeze
+
+    attr_reader :strategy_file
+
+    def initialize(strategy_file)
+      @strategy_file = Pathname(strategy_file)
+    end
+
+    def run
+      rounds = strategy_file.readlines.map { |line| ROUND_MAP[line.strip.split(/\s+/)] }
       scores = rounds.map do |opponent, player|
         SHAPE_SCORES[player] + OUTCOME_SCORES[[opponent, player]]
       end
@@ -48,3 +76,4 @@ module Rochambeau
 end
 
 Rochambeau::Solution1.new(*ARGV).run
+Rochambeau::Solution2.new(*ARGV).run
