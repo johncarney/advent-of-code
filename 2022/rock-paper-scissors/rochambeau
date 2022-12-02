@@ -9,17 +9,19 @@ module Rochambeau
     "Scissors" => 3
   }.freeze
 
-  OUTCOME_SCORES = {
-    %w[Rock     Rock    ] => 3, # Rock ties with rock
-    %w[Rock     Paper   ] => 6, # Paper beats rock
-    %w[Rock     Scissors] => 0, # Rock beats scissors
-    %w[Paper    Rock    ] => 0, # Paper beats rock
-    %w[Paper    Paper   ] => 3, # Paper ties with paper
-    %w[Paper    Scissors] => 6, # Scissors beats paper
-    %w[Scissors Rock    ] => 6, # Rock beats scissors
-    %w[Scissors Paper   ] => 0, # Scissots beas paper
-    %w[Scissors Scissors] => 3, # Scissors ties with scissors
-  }
+  WINNERS_VS_LOSERS = {
+    "Rock"     => "Scissors",
+    "Paper"    => "Rock",
+    "Scissors" => "Paper"
+  }.freeze
+
+  OUTCOME_SCORES = WINNERS_VS_LOSERS.map do |winner, loser|
+    {
+      [winner, loser]  => 0,
+      [winner, winner] => 3,
+      [loser,  winner] => 6
+    }
+  end.reduce(&:merge).freeze
 
   class Solution1
     SHAPE_MAP = {
