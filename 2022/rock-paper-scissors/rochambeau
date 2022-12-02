@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+require "pathname"
+
+module Rochambeau
+  SHAPE_SCORES = {
+    "Rock"     => 1,
+    "Paper"    => 2,
+    "Scissors" => 3
+  }.freeze
+
+  OUTCOME_SCORES = {
+    %w[Rock     Rock    ] => 3, # Rock ties with rock
+    %w[Rock     Paper   ] => 6, # Paper beats rock
+    %w[Rock     Scissors] => 0, # Rock beats scissors
+    %w[Paper    Rock    ] => 0, # Paper beats rock
+    %w[Paper    Paper   ] => 3, # Paper ties with paper
+    %w[Paper    Scissors] => 6, # Scissors beats paper
+    %w[Scissors Rock    ] => 6, # Rock beats scissors
+    %w[Scissors Paper   ] => 0, # Scissots beas paper
+    %w[Scissors Scissors] => 3, # Scissors ties with scissors
+  }
+
+  class Solution1
+    SHAPE_MAP = {
+      "A" => "Rock",
+      "B" => "Paper",
+      "C" => "Scissors",
+      "X" => "Rock",
+      "Y" => "Paper",
+      "Z" => "Scissors"
+    }.freeze
+
+    attr_reader :strategy_file
+
+    def initialize(strategy_file)
+      @strategy_file = Pathname(strategy_file)
+    end
+
+    def run
+      rounds = strategy_file.readlines.map { |line| SHAPES.values_at(*line.strip.split(/\s+/)) }
+      scores = rounds.map do |opponent, player|
+        SHAPE_SCORES[player] + OUTCOME_SCORES[[opponent, player]]
+      end
+      puts scores.sum
+    end
+  end
+end
+
+Rochambeau::Solution1.new(*ARGV).run
